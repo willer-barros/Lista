@@ -1,7 +1,20 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+
+class User(AbstractUser):
+    nome = models.CharField(max_length=255, null=False, blank=False)
+    celular = models.CharField(max_length=255, null=False, blank=False)
+    
+    def __str__(self):
+        return f"Nome: {self.nome}"
 
 
 class Task(models.Model):
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
     PRIORIDADE_CHOICES = [
         ("BAIXA", "Baixa"),
         ("MEDIA", "Media"),
@@ -22,5 +35,5 @@ class Task(models.Model):
     data_estimada = models.DateTimeField(null=True, blank=True)
     
     def __str__(self):
-        return f""
+        return f"{self.titulo} ({self.usuario})"
     
